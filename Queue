@@ -1,0 +1,102 @@
+//queue.c
+
+#include<stdio.h>
+#include"queue.h"
+BOOL empty(queue_t *rqueue) {
+    return(size(rqueue) == 0);
+}
+BOOL full(queue_t *rqueue) { 
+    return(size(rqueue) == MAX_SIZE);
+}
+int size(queue_t *rqueue) {
+    return rqueue->back_index + 1; 
+}
+E_t front(queue_t *rqueue) {
+    if(empty(rqueue)) {
+        printf("Queue Empty");
+        return E_T_DEFAULT;
+    }
+    return rqueue->items[rqueue->front_index];
+}
+void push_back(queue_t *rqueue,  E_t item) { 
+    if(full(rqueue)){
+        printf("Queue Full\n");
+        return;
+    }
+
+    rqueue->back_index++;
+    rqueue->items[rqueue->back_index] = item;
+    if(rqueue->front_index == -1) { 
+        rqueue->front_index=0;
+    }
+}
+void pop_front(queue_t *rqueue) { 
+    if(empty(rqueue)){
+        printf("Queue Empty\n");
+        return;
+    }
+    rqueue->items[rqueue->front_index] = E_T_DEFAULT;//
+    rqueue->front_index++;
+    if(rqueue->front_index > rqueue->back_index) {
+        rqueue->front_index = -1;
+        rqueue->back_index = -1;
+    }
+}
+
+
+//queue.h
+
+#define MAX_SIZE 5
+#define E_T_DEFAULT 0.0f
+typedef float E_t; 
+typedef int BOOL; 
+
+struct _queue_t {
+    E_t items[MAX_SIZE];
+    int front_index;
+    int back_index;
+};
+typedef struct _queue_t queue_t;
+
+BOOL empty(queue_t *rqueue);
+BOOL full(queue_t *rqueue);
+int size(queue_t *rqueue);
+E_t front(queue_t *rqueue);
+
+void push_back(queue_t *rqueue, 
+        E_t item);
+void pop_front(queue_t *rqueue);
+
+//queue_main.c
+
+#include<stdio.h>
+#include"queue.h"
+int main() {
+    queue_t salary_queue = {{},-1,-1};
+    push_back(&salary_queue,2000.0f);
+    push_back(&salary_queue,3000.0f);
+    push_back(&salary_queue,4000.0f);
+    push_back(&salary_queue,3500.0f);
+    push_back(&salary_queue,4500.0f);
+    push_back(&salary_queue,2500.0f);//!!!
+
+    printf("%.2f ", front(&salary_queue)); 
+    pop_front(&salary_queue);
+
+    printf("%.2f ", front(&salary_queue)); 
+    pop_front(&salary_queue);
+
+    printf("%.2f ", front(&salary_queue)); 
+    pop_front(&salary_queue);
+
+    printf("%.2f ", front(&salary_queue)); 
+    pop_front(&salary_queue);
+
+    printf("%.2f ", front(&salary_queue)); 
+    pop_front(&salary_queue);
+
+    printf("%.2f ", front(&salary_queue)); 
+    pop_front(&salary_queue);//!!!
+
+    return 0;
+}
